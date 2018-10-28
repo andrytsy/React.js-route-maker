@@ -1,0 +1,57 @@
+.menu-container
+    position absolute
+    left 20px
+    top 20px
+    width 300px
+    z-index 10
+    background #fff
+    box-shadow 1px 1px 1px rgba(0,0,0,0.3)
+
+.input-group
+    display flex
+    height 48px
+
+    &__input
+        width calc(100% - 24px)
+        padding-left 10px
+        margin 0px
+        flex-grow 1
+        border none
+        outline none
+
+    &__btn
+        padding-top 3px
+        flex-basis 48px
+        cursor pointer
+        transition 0.2s
+        opacity 0.3
+        text-align center
+        align-self center
+        &:hover
+            opacity 0.5
+
+.points-group
+    &__item
+        height 48px
+        padding 0 10px
+        background-color #fff
+        white-space nowrap
+        overflow hidden
+        max-width 300px
+        text-overflow ellipsis
+        display flex
+        align-items center
+        line-height 10px
+
+        &:nth-child(odd)
+            background-color #f3f3f3
+
+.item-block
+    &__text
+        flex-grow 1
+    
+    &__btn
+        cursor pointer
+        opacity 0.3
+        &:hover
+            opacity 0.5
