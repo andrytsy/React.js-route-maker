@@ -20,7 +20,8 @@
         outline none
 
     &__btn
-        padding-top 3px
+        padding-top 15px
+        padding-bottom 12px
         flex-basis 48px
         cursor pointer
         transition 0.2s
@@ -38,10 +39,9 @@
         white-space nowrap
         overflow hidden
         max-width 300px
-        text-overflow ellipsis
         display flex
         align-items center
-        line-height 10px
+        line-height 16px
 
         &:nth-child(odd)
             background-color #f3f3f3
@@ -49,6 +49,8 @@
 .item-block
     &__text
         flex-grow 1
+        overflow hidden
+        text-overflow ellipsis
     
     &__btn
         cursor pointer

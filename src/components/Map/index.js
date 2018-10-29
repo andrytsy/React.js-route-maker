@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import './index.styl';
+import Store from '../../store'
 
 export default class Map extends Component {
 	constructor() {
 		super()
+
+		this.map = null
+		this.state = {
+			points: Store.getState()
+		}
 
 		this.mapProps = {
 			height: '480px',
@@ -11,42 +17,50 @@ export default class Map extends Component {
 		}
 	}
 
+	mapInit() {
+		this.map = new window.ymaps.Map('map', {
+			center: [55.750625, 37.626],
+			zoom: 7,
+			controls: []
+		});
+	
+		new window.ymaps.SuggestView('current-point-input');
+	}
+
 	componentDidMount() {
-		function init () {
-			var multiRoute = new window.ymaps.multiRouter.MultiRoute({
-				// Описание опорных точек мультимаршрута.
-				referencePoints: [
-					[55.734876, 37.59308],
-					"Москва, ул. Мясницкая"
-				],
-				params: {
-					// Ограничение на максимальное количество маршрутов, возвращаемое маршрутизатором.
-					results: 3
-				}
-			}, {
-				// Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
-				boundsAutoApply: true
-			});
-		
-			// Создаем карту с добавленными на нее кнопками.
-			var myMap = new window.ymaps.Map('map', {
-				center: [55.750625, 37.626],
-				zoom: 7,
-				controls: []
-			});
-		
-			// Добавляем мультимаршрут на карту.
-			myMap.geoObjects.add(multiRoute);
+		this.unsubscribe = Store.subscribe(() => this.setState({points: Store.getState()}))
+		Store.subscribe(() => this.makeRoute())
 
-			new window.ymaps.SuggestView('current-point-input');
-		}
+		window.ymaps.ready(this.mapInit.bind(this));
+	}
 
-		window.ymaps.ready(init);
+	componentWillUnmount() {
+		this.unsubscribe()
+	}
+
+	makeRoute() {
+		if (this.state.points.length < 2) return null
+		
+		let points = this.state.points.map(point => { return point.name })
+
+		if (this.currentRoute)
+			this.map.geoObjects.remove(this.currentRoute)
+
+		this.currentRoute = new window.ymaps.multiRouter.MultiRoute({
+			referencePoints: points,
+			params: { results: 3 }
+		}, {
+			wayPointDraggable: true,
+			viaPointDraggable: true, 
+			boundsAutoApply: true 
+		})
+
+		this.map.geoObjects.add(this.currentRoute)
 	}
 
 	render() {
 		return (
-			<div id="map" className="Map"></div>
+			<div id='map' className='map'></div>
 		);
 	}
 }
