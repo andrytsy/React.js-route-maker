@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-
-import './index.styl';
 import Map from '../Map';
 import Menu from '../Menu';
+import './index.styl';
 
 export default class Main extends Component {
 	render() {

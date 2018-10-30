@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RouteMap from './components/Main';
+import { Provider } from 'react-redux'
+import Store from './redux/store'
+import RouteMakerApp from './components/Main';
 import './styles/styles.styl'
 
-ReactDOM.render(<RouteMap />, document.getElementById('root'));
+ReactDOM.render(<Provider store = {Store}><RouteMakerApp /></Provider>, document.getElementById('root'));
