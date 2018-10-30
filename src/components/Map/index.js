@@ -11,10 +11,6 @@ class Map extends Component {
 		super()
 
 		this.map = null
-		this.state = {
-			points: []
-		// 	// points: new Ymaps.GeoObjectCollection()
-		}
 	}
 
 	mapInit() {
@@ -26,20 +22,20 @@ class Map extends Component {
 	}
 
 	componentDidMount() {
-		console.log('---', this.props.points)
-		// this.unsubscribe = Store.subscribe(() => this.setPoint())
-
 		Ymaps.ready(this.mapInit.bind(this));
 	}
 
 	setPoint() {
-		// this.setState({points: Store.getState()})
-		// this.makeRoute()
+		let { points } = this.props 
+
+		console.log('---', points)
 	}
 
 	makeRoute() {
+
 		if (this.state.points.length < 2) return null
 		
+		// point => point.name === point => return point.name
 		let points = this.state.points.map(point => { return point.name })
 
 		if (this.currentRoute)
@@ -68,6 +64,7 @@ class Map extends Component {
 	}
 
 	render() {
+		this.setPoint()
 		return (
 			<div id='map' className='map'></div>
 		);
