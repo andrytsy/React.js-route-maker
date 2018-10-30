@@ -27,12 +27,16 @@ class Map extends Component {
 
 	setPoint() {
 		let { points } = this.props 
+		let point = points.find(item => item.coodinates === undefined)
 
-		console.log('---', points)
+		// if (point) {
+		// 	point.coodinates = this.map.getCenter()
+		// 	this.props.updatePoint(point)
+		// 	console.log('---', points)
+		// }
 	}
 
 	makeRoute() {
-
 		if (this.state.points.length < 2) return null
 		
 		// point => point.name === point => return point.name
@@ -52,7 +56,6 @@ class Map extends Component {
 
 		this.map.geoObjects.add(this.currentRoute)
 		
-		// this.map.getCenter()
 		// this.map.addOverlay(this.addConnection(this.state.points, 1, 2));
 	}
 

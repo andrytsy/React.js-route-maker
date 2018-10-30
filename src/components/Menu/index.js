@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { addPoint } from '../../redux/actions'
+import { addPoint, removePoint } from '../../redux/actions'
 import './index.styl';
 
 // import Store from '../../redux/store'
@@ -50,7 +50,7 @@ class Menu extends Component {
         return points.map(point => (
             <li key = {point.id} className='points-group__item item-block'>
                 <span className='item-block__text'>{point.name}</span> 
-                <span className='item-block__btn' onClick = {this.removePoint.bind(point.id)}></span>
+                <span className='item-block__btn' onClick = {this.removePoint.bind(this, point.id)}></span>
             </li>
         ))
     }
@@ -70,4 +70,4 @@ class Menu extends Component {
 
 }
 
-export default connect(store => ({ points: store.points }), {addPoint})(Menu)
+export default connect(store => ({ points: store.points }), {addPoint, removePoint})(Menu)
