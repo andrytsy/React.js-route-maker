@@ -12,7 +12,7 @@ class Map extends Component {
 
 		this.map = null
 		this.state = {
-			points: this.props.points
+			points: []
 		// 	// points: new Ymaps.GeoObjectCollection()
 		}
 	}
@@ -72,10 +72,6 @@ class Map extends Component {
 			<div id='map' className='map'></div>
 		);
 	}
-
-	// componentWillUnmount() {
-	// 	this.unsubscribe()
-	// }
 }
 
 export default connect(store => ({ points: store.points }), {updatePoint})(Map)
