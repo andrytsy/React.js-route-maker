@@ -35,30 +35,36 @@ class Map extends Component {
 			point.coodinates = this.map.getCenter()
 			this.props.updatePoint(point)
 
-			this.group.add(new Ymaps.Placemark(point.coodinates))
-			console.log('---', points)
+			this.group.add(new Ymaps.GeoObject({
+				geometry: {
+					type: "Point",
+					coordinates: point.coodinates
+				},
+				properties: {}
+			}, {
+				draggable: true
+			}))
+			// this.group.add(new Ymaps.Placemark({
+			// 	geometry: {
+			// 		type: "Point",
+			// 		coordinates: point.coodinates
+			// 	}
+			// }, {
+			// 	draggable: true
+			// }))
+
 			if (points.length > 1)
 				this.makeRoute()
+
+			this.map.geoObjects.add(this.group);
 		}
-
-		
-
 	}
 
 	makeRoute() {
-		// let { points } = this.props 
+		let { points } = this.props 
 		
-		let points = [];
-		this.group.forEach(function (obj) {
-			points.push(obj.getGeoPoint());
-		});
-
-		// this.map.addOverlay(this.group);
-		let polyline = new Ymaps.Polyline(points);
-		this.map.addOverlay(polyline);
-
-		// let coords = points.map(point => point.name)
-		// this.map.addOverlay(this.addConnection(points, coords[0], coords[1]));
+		let coords = points.map(point => point.coodinates)
+		this.group.add(new Ymaps.Polyline(coords))
 	}
 
 	addConnection(points, from, to) {
