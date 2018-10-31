@@ -1,84 +1,99 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { updatePoint } from '../../redux/actions'
-import './index.styl';
-
-// import Store from '../../redux/store'
+import { throttle } from '../../service'
+import './index.styl'
 
 const Ymaps = window.ymaps
+const mapSettings = {
+	center: [55.750625, 37.626],
+	zoom: 7,
+	controls: []
+}
+
+const lineSettings = {
+	balloonCloseButton: false,
+	strokeColor: '#000000',
+	strokeWidth: 4,
+	strokeOpacity: 0.5
+}
+
 class Map extends Component {
 	constructor() {
 		super()
 
 		this.map = null
-	}
-
-	mapInit() {
-		this.map = new Ymaps.Map('map', {
-			center: [55.750625, 37.626],
-			zoom: 7,
-			controls: []
-		});
-
-		this.group = new Ymaps.GeoObjectCollection();
+		this.line = null
 	}
 
 	componentDidMount() {
-		Ymaps.ready(this.mapInit.bind(this));
+		Ymaps.ready(this.mapInit.bind(this))
 	}
 
-	setPoint() {
+	mapInit() {
+		this.map = new Ymaps.Map('map', mapSettings)
+		this.group = new Ymaps.GeoObjectCollection()
+	}
+
+	componentDidUpdate() {
+		this.redrawGeoObjects(true)
+	}
+
+	redrawGeoObjects(isNeedAdd) {
+		isNeedAdd && this.addPoint()
+		this.drawLine()
+		this.updateMapObjects()
+	}
+
+	addPoint() {
 		let { points } = this.props 
-		let point = points.find(item => item.coodinates === undefined)
+		let point = points.find(item => item.geoObject === undefined)
 
-		if (point) {
-			point.coodinates = this.map.getCenter()
-			this.props.updatePoint(point)
+		point.geoObject = this.getGeoObject()
+		
+		this.group.add(point.geoObject)
+		this.initGeoObjectSubscribe(point.geoObject)
+	}
 
-			this.group.add(new Ymaps.GeoObject({
-				geometry: {
-					type: "Point",
-					coordinates: point.coodinates
-				},
-				properties: {}
-			}, {
-				draggable: true
-			}))
-			// this.group.add(new Ymaps.Placemark({
-			// 	geometry: {
-			// 		type: "Point",
-			// 		coordinates: point.coodinates
-			// 	}
-			// }, {
-			// 	draggable: true
-			// }))
+	getGeoObject() {
+		return new Ymaps.GeoObject({
+			geometry: {
+				type: 'Point',
+				coordinates: this.map.getCenter()
+			}
+		}, {
+			draggable: true 
+		})
+	}
 
-			if (points.length > 1)
-				this.makeRoute()
+	initGeoObjectSubscribe(geoObject) {
+		// todo не доделано
+		geoObject.geometry.events.add('change', () => {
+			console.log('update')
+			this.redrawGeoObjects()
+		})
+	}
 
-			this.map.geoObjects.add(this.group);
+	drawLine() {
+		let { points } = this.props
+		
+		if (points.length > 1) {
+			let coords = points.map(point => point.geoObject.geometry.getCoordinates())
+
+			this.line && this.group.remove(this.line)
+			this.line = new Ymaps.Polyline(coords)
+			this.group.add(this.line)
 		}
 	}
 
-	makeRoute() {
-		let { points } = this.props 
-		
-		let coords = points.map(point => point.coodinates)
-		this.group.add(new Ymaps.Polyline(coords))
+	updateMapObjects() {
+		this.map.geoObjects.removeAll()
+		this.map.geoObjects.add(this.group)
 	}
 
-	addConnection(points, from, to) {
-		return new Ymaps.Polyline([
-			points.get(from).getGeoPoint(),
-			points.get(to).getGeoPoint()
-		])
-	}
 
 	render() {
-		this.setPoint()
-		return (
-			<div id='map' className='map'></div>
-		);
+		return <div id='map' className='map'></div>
 	}
 }
 

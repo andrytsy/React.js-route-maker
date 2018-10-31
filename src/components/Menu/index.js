@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { addPoint, removePoint } from '../../redux/actions'
 import './index.styl';
 
-// import Store from '../../redux/store'
-
 class Menu extends Component {
     constructor() {
         super()
@@ -13,7 +11,6 @@ class Menu extends Component {
             pointName: ''
         }
     }
-    
 
     addPoint() {
         if (this.state.pointName.trim() === '') return null
