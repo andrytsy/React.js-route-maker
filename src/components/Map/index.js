@@ -19,6 +19,8 @@ class Map extends Component {
 			zoom: 7,
 			controls: []
 		});
+
+		this.group = new Ymaps.GeoObjectCollection();
 	}
 
 	componentDidMount() {
@@ -29,34 +31,34 @@ class Map extends Component {
 		let { points } = this.props 
 		let point = points.find(item => item.coodinates === undefined)
 
-		// if (point) {
-		// 	point.coodinates = this.map.getCenter()
-		// 	this.props.updatePoint(point)
-		// 	console.log('---', points)
-		// }
+		if (point) {
+			point.coodinates = this.map.getCenter()
+			this.props.updatePoint(point)
+
+			this.group.add(new Ymaps.Placemark(point.coodinates))
+			console.log('---', points)
+			if (points.length > 1)
+				this.makeRoute()
+		}
+
+		
+
 	}
 
 	makeRoute() {
-		if (this.state.points.length < 2) return null
+		// let { points } = this.props 
 		
-		// point => point.name === point => return point.name
-		let points = this.state.points.map(point => { return point.name })
+		let points = [];
+		this.group.forEach(function (obj) {
+			points.push(obj.getGeoPoint());
+		});
 
-		if (this.currentRoute)
-			this.map.geoObjects.remove(this.currentRoute)
+		// this.map.addOverlay(this.group);
+		let polyline = new Ymaps.Polyline(points);
+		this.map.addOverlay(polyline);
 
-		this.currentRoute = new Ymaps.multiRouter.MultiRoute({
-			referencePoints: points,
-			params: { results: 3 }
-		}, {
-			wayPointDraggable: true,
-			viaPointDraggable: true, 
-			boundsAutoApply: true 
-		})
-
-		this.map.geoObjects.add(this.currentRoute)
-		
-		// this.map.addOverlay(this.addConnection(this.state.points, 1, 2));
+		// let coords = points.map(point => point.name)
+		// this.map.addOverlay(this.addConnection(points, coords[0], coords[1]));
 	}
 
 	addConnection(points, from, to) {
