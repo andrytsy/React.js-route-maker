@@ -6,17 +6,17 @@ import './index.styl'
 
 
 const SortableItem = SortableElement(({point}) =>
-    <li className='points-group__item item-block'>
-        <span className='item-block__text'>{point.name}</span> 
-        <span className='item-block__btn' onClick = {removePoint.bind(point.id)}></span>
-    </li>
+    <span className='item-block__text'>{point.name}</span> 
 )
 
-const SortableList = SortableContainer(({points}) => {
+const SortableList = SortableContainer(({points, onRemove}) => {
     return (
         <ul className='menu-container__points points-group'>
             {points.map((point, index) => (
-                <SortableItem key={point.id} index={index} point={point} />
+                <li key={point.id}  className='points-group__item item-block'>
+                    <SortableItem index={index} point={point} />
+                    <span className='item-block__btn' onClick = {() => { onRemove(point.id)}}></span>
+                </li>
             ))}
         </ul>
     )
@@ -58,7 +58,7 @@ class Menu extends Component {
     }
 
     render() {
-        const {points} = this.props
+        const {points, removePoint} = this.props
 
         return (
             <div className='menu-container'>
@@ -68,9 +68,9 @@ class Menu extends Component {
                            onChange = {this.inputHandle.bind(this)}
                            onKeyUp = {this.pressEnterHandler.bind(this)}
                     />
-                    <div className='input-group__btn' onClick = {this.addPoint.bind(this)}></div>
+                    <div className='input-group__btn' onClick={this.addPoint.bind(this)}></div>
                 </div>
-                <SortableList points={points} onSortEnd={this.onSortEnd} />
+                <SortableList points={points} onSortEnd={this.onSortEnd} onRemove={removePoint} />
             </div>
         )
     }

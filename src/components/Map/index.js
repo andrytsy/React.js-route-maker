@@ -24,28 +24,36 @@ class Map extends Component {
 	mapInit() {
 		this.map = new Ymaps.Map('map', mapSettings)
 		this.group = new Ymaps.GeoObjectCollection()
+		this.map.geoObjects.add(this.group)
 	}
 
-	componentDidUpdate() {
-		this.redrawGeoObjects(true)
+	componentDidUpdate(prevProps) {
+		this.redrawGeoObjects(prevProps.points)
 	}
 
-	redrawGeoObjects(isNeedAdd) {
-		isNeedAdd && this.addPoint()
-		this.drawLine()
-		this.updateMapObjects()
-	}
-
-	addPoint() {
+	redrawGeoObjects(prevPointsArr) {
 		let { points } = this.props
-		let point = points.find(item => item.geoObject === undefined)
-		
-		if (point) {
-			point.geoObject = this.getGeoObject(point.name)
-			
-			this.group.add(point.geoObject)
-			this.initDragListener(point.geoObject)
-		}
+		let newPoint = points.find(item => item.geoObject === undefined)
+
+		if (!newPoint && prevPointsArr && prevPointsArr.length !== points.length)
+			this.deletePoint(prevPointsArr, points)
+
+		newPoint && this.addPoint(newPoint)
+		this.drawLine()
+	}
+
+	deletePoint(prevArr, currentArr) {
+		let ids = currentArr.map(item => item.id)
+		let point = prevArr.find(item => !~ids.indexOf(item.id) )
+
+		point && this.group.remove(point.geoObject)
+	}
+
+	addPoint(point) {
+		point.geoObject = this.getGeoObject(point.name)
+
+		this.group.add(point.geoObject)
+		this.initDragListener(point.geoObject)
 	}
 
 	getGeoObject(piontName) {
@@ -68,21 +76,17 @@ class Map extends Component {
 
 	drawLine() {
 		let { points } = this.props
+
+		this.line && this.group.remove(this.line)
+		this.line = null
 		
 		if (points.length > 1) {
 			let coords = points.map(point => point.geoObject.geometry.getCoordinates())
 
-			this.line && this.group.remove(this.line)
 			this.line = new Ymaps.Polyline(coords)
 			this.group.add(this.line)
 		}
 	}
-
-	updateMapObjects() {
-		this.map.geoObjects.removeAll()
-		this.map.geoObjects.add(this.group)
-	}
-
 
 	render() {
 		return <div id='map' className='map'></div>
