@@ -16,6 +16,10 @@ class Map extends Component {
 		this.map = null
 		this.line = null
 	}
+	
+	render() {
+		return <div id='map' className='map'></div>
+	}
 
 	componentDidMount() {
 		Ymaps.ready(this.mapInit.bind(this))
@@ -28,10 +32,10 @@ class Map extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		this.redrawGeoObjects(prevProps.points)
+		this.redrawMapObjects(prevProps.points)
 	}
 
-	redrawGeoObjects(prevPointsArr) {
+	redrawMapObjects(prevPointsArr) {
 		let { points } = this.props
 		let newPoint = points.find(item => item.geoObject === undefined)
 
@@ -56,14 +60,14 @@ class Map extends Component {
 		this.initDragListener(point.geoObject)
 	}
 
-	getGeoObject(piontName) {
+	getGeoObject(pointName) {
 		return new Ymaps.GeoObject({
 			geometry: {
 				type: 'Point',
 				coordinates: this.map.getCenter()
 			},
 			properties: {
-				balloonContentHeader: piontName
+				balloonContentHeader: pointName
 			}
 		}, {
 			draggable: true 
@@ -71,7 +75,7 @@ class Map extends Component {
 	}
 
 	initDragListener(geoObject) {
-		geoObject.events.add('dragend', () => this.redrawGeoObjects())
+		geoObject.events.add('dragend', () => this.redrawMapObjects())
 	}
 
 	drawLine() {
@@ -86,10 +90,6 @@ class Map extends Component {
 			this.line = new Ymaps.Polyline(coords)
 			this.group.add(this.line)
 		}
-	}
-
-	render() {
-		return <div id='map' className='map'></div>
 	}
 }
 
