@@ -12,6 +12,6 @@ export function updatePoint(point) {
     return { type: UPDATE_POINT, point }
 }
 
-export function swapPoints(point) {
-    return { type: SWAP_POINTS, point }
+export function swapPoints(swapedPoints) {
+    return { type: SWAP_POINTS, swapedPoints }
 }

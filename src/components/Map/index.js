@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { updatePoint } from '../../redux/actions'
-import { throttle } from '../../service'
 import './index.styl'
 
 const Ymaps = window.ymaps
@@ -9,13 +8,6 @@ const mapSettings = {
 	center: [55.750625, 37.626],
 	zoom: 7,
 	controls: []
-}
-
-const lineSettings = {
-	balloonCloseButton: false,
-	strokeColor: '#000000',
-	strokeWidth: 4,
-	strokeOpacity: 0.5
 }
 
 class Map extends Component {
@@ -46,13 +38,14 @@ class Map extends Component {
 	}
 
 	addPoint() {
-		let { points } = this.props 
+		let { points, updatePoint } = this.props 
 		let point = points.find(item => item.geoObject === undefined)
 
 		point.geoObject = this.getGeoObject()
 		
 		this.group.add(point.geoObject)
-		this.initGeoObjectSubscribe(point.geoObject)
+		this.initDragListener(point.geoObject)
+		// updatePoint(point)
 	}
 
 	getGeoObject() {
@@ -66,12 +59,8 @@ class Map extends Component {
 		})
 	}
 
-	initGeoObjectSubscribe(geoObject) {
-		// todo не доделано
-		geoObject.geometry.events.add('change', () => {
-			console.log('update')
-			this.redrawGeoObjects()
-		})
+	initDragListener(geoObject) {
+		geoObject.events.add('dragend', () => this.redrawGeoObjects())
 	}
 
 	drawLine() {
