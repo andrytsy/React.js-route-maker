@@ -59,7 +59,6 @@ class Menu extends Component {
 
     render() {
         const {points} = this.props
-        console.log('points', points)
 
         return (
             <div className='menu-container'>

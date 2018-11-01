@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { updatePoint } from '../../redux/actions'
 import './index.styl'
 
 const Ymaps = window.ymaps
@@ -38,21 +37,25 @@ class Map extends Component {
 	}
 
 	addPoint() {
-		let { points, updatePoint } = this.props 
+		let { points } = this.props
 		let point = points.find(item => item.geoObject === undefined)
-
-		point.geoObject = this.getGeoObject()
 		
-		this.group.add(point.geoObject)
-		this.initDragListener(point.geoObject)
-		// updatePoint(point)
+		if (point) {
+			point.geoObject = this.getGeoObject(point.name)
+			
+			this.group.add(point.geoObject)
+			this.initDragListener(point.geoObject)
+		}
 	}
 
-	getGeoObject() {
+	getGeoObject(piontName) {
 		return new Ymaps.GeoObject({
 			geometry: {
 				type: 'Point',
 				coordinates: this.map.getCenter()
+			},
+			properties: {
+				balloonContentHeader: piontName
 			}
 		}, {
 			draggable: true 
@@ -86,4 +89,4 @@ class Map extends Component {
 	}
 }
 
-export default connect(store => ({ points: store.points }), {updatePoint})(Map)
+export default connect(store => ({ points: store.points }), null)(Map)
