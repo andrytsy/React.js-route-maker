@@ -44,6 +44,7 @@
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",
     "react-sortable-hoc": "^0.8.3",
+    "react-test-renderer": "^16.6.0",
     "redux": "^4.0.1",
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
@@ -75,7 +76,9 @@
     ],
     "resolver": "jest-pnp-resolver",
     "setupFiles": [
-      "react-app-polyfill/jsdom"
+      "react-app-polyfill/jsdom",
+      "<rootDir>/config/tempPolyfills.js",
+      "<rootDir>/src/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx}",
@@ -111,7 +114,10 @@
     ]
   },
   "devDependencies": {
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "redux-devtools": "^3.4.1",
+    "redux-mock-store": "^1.5.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"
   }

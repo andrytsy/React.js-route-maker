@@ -36,7 +36,7 @@ class Menu extends Component {
         return (
             <div className='menu-container'>
                 <div className='menu-container__input-block input-group'>
-                    <input className='input-group__input' id='current-point-input'
+                    <input className='input-group__input'
                            value = {this.state.pointName}
                            onChange = {this.inputHandler.bind(this)}
                            onKeyUp = {this.keyUpHandler.bind(this)}

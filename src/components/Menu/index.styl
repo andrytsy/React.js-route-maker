@@ -1,3 +1,8 @@
+user-select(n) 
+    -moz-user-select n
+    -khtml-user-select n
+    user-select n
+
 .menu-container
     position absolute
     left 20px
@@ -54,6 +59,12 @@
         z-index 2
         height 100%
         line-height 48px
+        user-select(none)
+        cursor grab
+        &:active
+            cursor grabbing
+        &:focus
+            cursor grabbing
     
     &__btn
         cursor pointer
