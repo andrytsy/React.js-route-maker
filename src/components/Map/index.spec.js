@@ -1,26 +1,24 @@
 import React from 'react'
-import configureStore from 'redux-mock-store'
 import { shallow } from 'enzyme'
+import configureStore from 'redux-mock-store'
+
 import Map from './index.js'
 
-const initialState = {}; 
-const mockStore = configureStore();
-let MapContainer;
-let store;
+describe('Component > Map',()=>{
+    const initialState = { points: [] }
+    const mockStore = configureStore()
+    let wrapper, store
 
-const mapSettings = {
-	center: [55.750625, 37.626],
-	zoom: 7,
-	controls: []
-}
+    beforeEach(()=>{
+        store = mockStore(initialState)
+        wrapper = shallow(<Map store = {store} />)
+    })
 
-beforeEach(() => {
-    store = mockStore(initialState)
-    MapContainer = shallow(<Map store={store}/>)
-})
+    it('+++ capturing snapshot', () => {
+        expect(wrapper).toMatchSnapshot()
+    })
 
-describe('Map component', () => {
-    it('map render', () => {
-        expect(MapContainer.find('ymaps')).toHaveLength(0)
+    it('+++ render the connected component', () => {
+        expect(wrapper.length).toEqual(1)
     })
 })

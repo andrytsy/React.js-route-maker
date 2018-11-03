@@ -10,7 +10,7 @@ const SortableItem = SortableElement(({point}) =>
 
 const SortableList = SortableContainer(({points, onRemove}) => {
     return (
-        <ul className='menu-container__points points-group'>
+        <ul className='list-container__points points-group'>
             {points.map((point, index) => (
                 <li key={point.id} className='points-group__item item-block'>
                     <SortableItem index={index} point={point} />
@@ -21,7 +21,7 @@ const SortableList = SortableContainer(({points, onRemove}) => {
     )
 })
 
-class Menu extends Component {
+export class PointsList extends Component {
     constructor() {
         super()
 
@@ -34,8 +34,8 @@ class Menu extends Component {
         const {points, removePoint} = this.props
 
         return (
-            <div className='menu-container'>
-                <div className='menu-container__input-block input-group'>
+            <div className='list-container'>
+                <div className='list-container__input-block input-group'>
                     <input className='input-group__input'
                            value = {this.state.pointName}
                            onChange = {this.inputHandler.bind(this)}
@@ -75,4 +75,4 @@ class Menu extends Component {
     }
 }
 
-export default connect(store => ({ points: store.points }), {addPoint, removePoint, swapPoints})(Menu)
+export default connect(store => ({ points: store.points }), {addPoint, removePoint, swapPoints})(PointsList)
