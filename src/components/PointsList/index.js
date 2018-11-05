@@ -22,12 +22,8 @@ const SortableList = SortableContainer(({points, onRemove}) => {
 })
 
 export class PointsList extends Component {
-    constructor() {
-        super()
-
-        this.state = {
-            pointName: ''
-        }
+    state = {
+        pointName: ''
     }
 
     render() {
@@ -41,7 +37,7 @@ export class PointsList extends Component {
                            onChange = {this.inputHandler.bind(this)}
                            onKeyUp = {this.keyUpHandler.bind(this)}
                     />
-                    <div className='input-group__btn' onClick={this.addPoint.bind(this)}></div>
+                    <div className='input-group__btn' onClick={this.addPoint.bind(this)} />
                 </div>
                 <SortableList points={points} onSortEnd={this.onSortEnd} onRemove={removePoint} />
             </div>
