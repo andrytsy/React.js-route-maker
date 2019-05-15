@@ -6,5 +6,3 @@
 `npm start` - запуск проекта
 
 `npm test` - запуск тестов jest + enzyme
-
-### #Хочу_В_FunBox
